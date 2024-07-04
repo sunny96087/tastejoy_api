@@ -1,0 +1,139 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "tastejoy api",
+    "description": "食享 - 美食地圖專題 api"
+  },
+  "host": "localhost:3666",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Vendors-front",
+      "description": "賣家 (前台)"
+    },
+    {
+      "name": "Vendors-back",
+      "description": "賣家 (後台)"
+    },
+    {
+      "name": "Vendors-manage",
+      "description": "賣家 (平台管理員)"
+    },
+    {
+      "name": "Teachers-front",
+      "description": "老師 (前台)"
+    },
+    {
+      "name": "Teachers-back",
+      "description": "老師 (後台)"
+    },
+    {
+      "name": "Teachers-manage",
+      "description": "老師 (平台管理員)"
+    },
+    {
+      "name": "Courses-front",
+      "description": "課程 (前台)"
+    },
+    {
+      "name": "Courses-back",
+      "description": "課程 (後台)"
+    },
+    {
+      "name": "Courses-manage",
+      "description": "課程 (平台管理員)"
+    },
+    {
+      "name": "Orders-front",
+      "description": "訂單 (前台)"
+    },
+    {
+      "name": "Orders-back",
+      "description": "訂單 (後台)"
+    },
+    {
+      "name": "Orders-manage",
+      "description": "訂單 (平台管理員)"
+    },
+    {
+      "name": "Auth-front",
+      "description": "登入/註冊 (前台)"
+    },
+    {
+      "name": "Members-front",
+      "description": "會員 (前台)"
+    },
+    {
+      "name": "Collections-front",
+      "description": "收藏 (前台)"
+    },
+    {
+      "name": "Platforms-front",
+      "description": "平台資料"
+    },
+    {
+      "name": "Platforms-manage",
+      "description": "平台資料 (平台管理員)"
+    },
+    {
+      "name": "Feedback-front",
+      "description": "回饋 (前台)"
+    },
+    {
+      "name": "Upload-front",
+      "description": "上傳圖片 (前台)"
+    },
+    {
+      "name": "Upload-back",
+      "description": "上傳圖片 (後台)"
+    },
+    {
+      "name": "Upload-manage",
+      "description": "上傳圖片 (平台管理員)"
+    },
+    {
+      "name": "HR",
+      "description": "--- 分隔線 - 以下是參考的 ---"
+    },
+    {
+      "name": "Index",
+      "description": "首頁"
+    },
+    {
+      "name": "Users",
+      "description": "使用者"
+    },
+    {
+      "name": "Posts",
+      "description": "文章"
+    },
+    {
+      "name": "Upload",
+      "description": "上傳圖片"
+    },
+    {
+      "name": "Email",
+      "description": "信箱驗證"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Index"
+        ],
+        "description": "express 預設首頁，目前沒用",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    }
+  }
+}
