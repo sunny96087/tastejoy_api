@@ -5,7 +5,7 @@
     "title": "tastejoy api",
     "description": "食享 - 美食地圖專題 api"
   },
-  "host": "localhost:3666",
+  "host": "tastejoy-api.onrender.com",
   "basePath": "/",
   "tags": [
     {
@@ -13,8 +13,16 @@
       "description": "回饋 (前台)"
     },
     {
+      "name": "Auth-front",
+      "description": "登入/註冊 (前台)"
+    },
+    {
       "name": "HR",
       "description": "--- 分隔線 - 以下是參考的 ---"
+    },
+    {
+      "name": "Members-front",
+      "description": "會員 (前台)"
     },
     {
       "name": "Vendors-front",
@@ -65,14 +73,6 @@
       "description": "訂單 (平台管理員)"
     },
     {
-      "name": "Auth-front",
-      "description": "登入/註冊 (前台)"
-    },
-    {
-      "name": "Members-front",
-      "description": "會員 (前台)"
-    },
-    {
       "name": "Collections-front",
       "description": "收藏 (前台)"
     },
@@ -118,7 +118,6 @@
     }
   ],
   "schemes": [
-    "http",
     "https"
   ],
   "paths": {
@@ -128,6 +127,544 @@
           "Index"
         ],
         "description": "express 預設首頁，目前沒用",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth-front"
+        ],
+        "summary": "註冊",
+        "description": "註冊會員<br>  * account(string): 帳號。需為 Email 格式<br>  * password(string): 密碼。需至少 8 位數，且英數混合。<br>  * confirmPassword(string): 確認密碼。兩次密碼需一致。<br>  ",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "登入資訊",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "account": {
+                  "type": "string",
+                  "example": "tester01@test.test"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "tester01"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "tester01"
+                }
+              },
+              "required": [
+                "account",
+                "password",
+                "confirmPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "tags": [
+          "Auth-front"
+        ],
+        "summary": "登入",
+        "description": "會員登入<br>  * account(string): 帳號。需為 Email 格式<br>  * password(string): 密碼。需至少 8 位數，且英數混合。<br>  ",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "登入資訊",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "account": {
+                  "type": "string",
+                  "example": "tester01@test.test"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "tester01"
+                }
+              },
+              "required": [
+                "account",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/check-account-exist": {
+      "post": {
+        "tags": [
+          "Auth-front"
+        ],
+        "summary": "檢查帳號是否可以使用",
+        "description": "檢查帳號是否可以使用<br>  不存在回傳 200，已存在回傳 400<br>  * account(string): 帳號。需為 Email 格式",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "account": {
+                  "type": "string",
+                  "example": "tester01@test.test"
+                }
+              },
+              "required": [
+                "account"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/check-account-duplicate": {
+      "post": {
+        "tags": [
+          "Auth-front"
+        ],
+        "summary": "檢查帳號是否重複",
+        "description": "檢查帳號是否重複<br>  已存在回傳 200，不存在回傳 400<br>  * account(string): 帳號。需為 Email 格式",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "account": {
+                  "type": "string",
+                  "example": "tester01@test.test"
+                }
+              },
+              "required": [
+                "account"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/forget-password": {
+      "post": {
+        "tags": [
+          "Auth-front"
+        ],
+        "summary": "忘記密碼",
+        "description": "忘記密碼，發送重設密碼信至會員信箱，測試要收到信要帶真實信箱",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "account": {
+                  "type": "string",
+                  "example": "tester01@test.test"
+                }
+              },
+              "required": [
+                "account"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Auth-front"
+        ],
+        "summary": "重設密碼",
+        "description": "重設密碼",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "example": "重設密碼 token"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "Aa123456@"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "Aa123456@"
+                }
+              },
+              "required": [
+                "token",
+                "password",
+                "confirmPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": [
+          "Auth-front"
+        ],
+        "summary": "Google 登入",
+        "description": "Google 登入",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/google/callback": {
+      "get": {
+        "tags": [
+          "Auth-front"
+        ],
+        "summary": "Google 登入 callback",
+        "description": "Google 登入 callback",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/fail": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/manage": {
+      "post": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "取得所有會員 (開發查詢用)",
+        "description": "取得所有會員資料 (方便開發查詢用) <br>  body 需帶入管理員密碼",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "管理者密碼",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "adminPassword": {
+                  "type": "string",
+                  "example": "管理員密碼"
+                }
+              },
+              "required": [
+                "adminPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/memberOne": {
+      "get": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "取得登入會員資料",
+        "description": "取得登入會員資料",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "修改會員資料",
+        "description": "修改登入會員資料，只需帶入欲修改欄位 <br>  interests 陣列中可帶入值為: ['工藝手作','烹飪烘烤','藝術人文','生活品味'] <br>  gender 可帶入值為: male, female, other <br>  birthday 格式需為 Date 物件格式: YYYY-MM-DD、YYYY-MM-DD HH:mm:ss.SSS 等 <br>",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nickname": {
+                  "type": "string",
+                  "example": "瑄瑄仔"
+                },
+                "interests": {
+                  "type": "array",
+                  "example": [
+                    "工藝手作",
+                    "烹飪烘烤"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "name": {
+                  "type": "string",
+                  "example": ""
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "female"
+                },
+                "birthday": {
+                  "type": "string",
+                  "example": "2000-01-01 12:00:00.000"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "886912345678"
+                },
+                "point": {
+                  "type": "number",
+                  "example": 10000
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/memberOne/collections": {
+      "get": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "取得登入會員收藏",
+        "description": "取得登入會員收藏",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "會員新增收藏",
+        "description": "會員新增收藏",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "courseId": {
+                  "type": "string",
+                  "example": "帶入有效課程 Id"
+                }
+              },
+              "required": [
+                "courseId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/memberOne/collections/{collectionId}": {
+      "delete": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "會員刪除收藏",
+        "description": "會員刪除收藏",
+        "parameters": [
+          {
+            "name": "collectionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/memberOne/orders": {
+      "get": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "取得登入會員全部訂單",
+        "description": "取得登入會員全部訂單 <br>  訂單狀態；0:未付款, 1:已付款, 2:已確認收款, 3:已完成, 4:已取消, 5:訂單取消(不需退款), 6:訂單取消(待退款), 7:訂單取消(已退款)",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/memberOne/password": {
+      "patch": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "修改會員密碼",
+        "description": "修改會員密碼 <br>  newPassword: 新密碼需包含英文及數字，且至少 8 碼 <br>  confirmNewPassword: 確認新密碼 <br>",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "newPassword": {
+                  "type": "string",
+                  "example": "Abc123456"
+                },
+                "confirmNewPassword": {
+                  "type": "string",
+                  "example": "Abc123456"
+                }
+              },
+              "required": [
+                "newPassword",
+                "confirmNewPassword"
+              ]
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": ""

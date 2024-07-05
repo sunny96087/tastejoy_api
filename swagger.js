@@ -9,11 +9,11 @@ const doc = {
     description: "食享 - 美食地圖專題 api",
   },
   // * 開發
-  host: "localhost:3666",
-  schemes: ["http", "https"],
+  // host: "localhost:3666",
+  // schemes: ["http", "https"],
   // * 部署
-  // host: "tastejoy-api.onrender.com",
-  // schemes: ["https"],
+  host: "tastejoy-api.onrender.com",
+  schemes: ["https"],
 
   basePath: "/",
   tags: [
@@ -23,9 +23,18 @@ const doc = {
       description: "回饋 (前台)",
     },
     {
+      name: "Auth-front",
+      description: "登入/註冊 (前台)",
+    },
+    {
       name: "HR",
       description: "--- 分隔線 - 以下是參考的 ---",
     },
+    {
+      name: "Members-front",
+      description: "會員 (前台)",
+    },
+
     {
       name: "Vendors-front",
       description: "賣家 (前台)",
@@ -73,14 +82,6 @@ const doc = {
     {
       name: "Orders-manage",
       description: "訂單 (平台管理員)",
-    },
-    {
-      name: "Auth-front",
-      description: "登入/註冊 (前台)",
-    },
-    {
-      name: "Members-front",
-      description: "會員 (前台)",
     },
     {
       name: "Collections-front",

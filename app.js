@@ -51,8 +51,8 @@ mongoose
 // const emailRouter = require("./routes/email");
 
 // const vendorsRouter = require("./routes/vendors");
-// const membersRouter = require("./routes/member");
-// const authRouter = require("./routes/auth");
+const membersRouter = require("./routes/member");
+const authRouter = require("./routes/auth");
 const feedbackRouter = require("./routes/feedback");
 // const orderRouter = require("./routes/order");
 // const platformRouter = require("./routes/platform");
@@ -104,8 +104,8 @@ app.use("/", indexRouter);
 // app.use("/upload", uploadRouter);
 // app.use("/email", emailRouter);
 
-// app.use("/auth", authRouter);
-// app.use("/members", membersRouter);
+app.use("/auth", authRouter);
+app.use("/members", membersRouter);
 // app.use("/orders", orderRouter);
 // app.use("/collections", collectionRouter);
 app.use("/feedbacks", feedbackRouter);

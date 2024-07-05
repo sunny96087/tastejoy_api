@@ -6,36 +6,44 @@ const memberSchema = new mongoose.Schema(
     googleId: {
       type: String,
       unique: true,
+      sparse: true,
     },
     // google 帳號
     googleAccount: {
       type: String,
       unique: true,
+      sparse: true,
     },
     // dc id
     dcId: {
       type: String,
       unique: true,
+      sparse: true,
     },
     // dc 帳號
     dcAccount: {
       type: String,
       unique: true,
+      sparse: true,
     },
     // github id
     githubId: {
       type: String,
       unique: true,
+      sparse: true,
     },
     // github 帳號
     githubAccount: {
       type: String,
       unique: true,
+      sparse: true,
     },
     // 帳號
     account: {
       type: String,
       unique: true,
+      unique: true,
+      sparse: true,
     },
     // 密碼
     password: {
@@ -123,6 +131,14 @@ const memberSchema = new mongoose.Schema(
     // toObject: { virtuals: true },
   }
 );
+
+memberSchema.pre("save", async function (next) {
+  if (this.isNew && !this.name) {
+    const count = await this.constructor.countDocuments();
+    this.name = `新用戶${count + 1}`;
+  }
+  next();
+});
 
 const Member = mongoose.model("Member", memberSchema);
 
