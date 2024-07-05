@@ -6,7 +6,10 @@ var cookieParser = require("cookie-parser"); // 引入 cookie-parser 中間件�
 var morgan = require("morgan"); // 引入 morgan 中間件，用於日誌記錄
 var cors = require("cors"); // 引入允許跨網域套件 cors
 const logger = require("./logger"); // 引入 logger.js => Winston 日誌
-const { updateFinishedOrders, updateExpiredOrders } = require("./utils/cronJobs"); // 引入 cronJobs.js 定時任務
+const {
+  updateFinishedOrders,
+  updateExpiredOrders,
+} = require("./utils/cronJobs"); // 引入 cronJobs.js 定時任務
 const swaggerUi = require("swagger-ui-express"); // swagger
 const swaggerFile = require("./swagger_output.json");
 const mongoose = require("mongoose");
@@ -50,7 +53,7 @@ mongoose
 // const vendorsRouter = require("./routes/vendors");
 // const membersRouter = require("./routes/member");
 // const authRouter = require("./routes/auth");
-// const feedbackRouter = require("./routes/feedback");
+const feedbackRouter = require("./routes/feedback");
 // const orderRouter = require("./routes/order");
 // const platformRouter = require("./routes/platform");
 // const collectionRouter = require("./routes/collection");
@@ -105,7 +108,7 @@ app.use("/", indexRouter);
 // app.use("/members", membersRouter);
 // app.use("/orders", orderRouter);
 // app.use("/collections", collectionRouter);
-// app.use("/feedbacks", feedbackRouter);
+app.use("/feedbacks", feedbackRouter);
 // app.use("/platforms", platformRouter);
 // app.use("/courses", courseRouter);
 

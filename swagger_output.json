@@ -9,6 +9,14 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "Feedback-front",
+      "description": "回饋 (前台)"
+    },
+    {
+      "name": "HR",
+      "description": "--- 分隔線 - 以下是參考的 ---"
+    },
+    {
       "name": "Vendors-front",
       "description": "賣家 (前台)"
     },
@@ -77,10 +85,6 @@
       "description": "平台資料 (平台管理員)"
     },
     {
-      "name": "Feedback-front",
-      "description": "回饋 (前台)"
-    },
-    {
       "name": "Upload-front",
       "description": "上傳圖片 (前台)"
     },
@@ -91,10 +95,6 @@
     {
       "name": "Upload-manage",
       "description": "上傳圖片 (平台管理員)"
-    },
-    {
-      "name": "HR",
-      "description": "--- 分隔線 - 以下是參考的 ---"
     },
     {
       "name": "Index",
@@ -128,6 +128,64 @@
           "Index"
         ],
         "description": "express 預設首頁，目前沒用",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/feedbacks/": {
+      "post": {
+        "tags": [
+          "Feedback-front"
+        ],
+        "summary": "新增回饋",
+        "description": "新增回饋<br>  memberId: 會員 ID<br>  contactPerson: 姓名 *<br>  phone: 電話<br>  email: 信箱 *<br>  feedback: 內容 *<br>  source: 來源。限定值：[\"網路搜尋\", \"親友推薦\", \"社群媒體\", \"其他\"]<br>  ",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "memberId": {
+                  "type": "string",
+                  "example": "會員 ID"
+                },
+                "contactPerson": {
+                  "type": "string",
+                  "example": "姓名"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "電話"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "信箱"
+                },
+                "feedback": {
+                  "type": "string",
+                  "example": "內容"
+                },
+                "source": {
+                  "type": "string",
+                  "example": "來源"
+                }
+              },
+              "required": [
+                "memberId",
+                "contactPerson",
+                "phone",
+                "email",
+                "feedback",
+                "source"
+              ]
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": ""
