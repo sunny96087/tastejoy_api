@@ -94,7 +94,7 @@ const memberSchema = new mongoose.Schema(
         ref: "MemberCategory", // 引用 MemberCategory 集合
       },
     ],
-    // 朋友
+    // 朋友資料表 ID
     friendId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Friend",

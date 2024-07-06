@@ -1,4 +1,5 @@
 const Member = require("../models/member");
+const Friend = require("../models/friend");
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
 const appError = require("../utils/appError");
@@ -51,6 +52,16 @@ const authController = {
     if (!newMember) {
       return next(appError(500, "註冊失敗"));
     }
+
+    // 創建對應的好友資料表
+    const newFriendList = await Friend.create({
+      memberId: newMember._id,
+      friendList: [],
+    });
+
+    // 將好友資料表的 _id 更新到會員資料中
+    newMember.friendId = newFriendList._id;
+    await newMember.save();
 
     generateSendJWT(newMember, 201, res, "註冊成功");
   },
@@ -275,7 +286,18 @@ const authController = {
       if (!member) {
         return next(appError(500, "Google 登入失敗"));
       }
+
+      // 創建對應的好友資料表
+      const newFriendList = await Friend.create({
+        memberId: member._id,
+        friendList: [],
+      });
+
+      // 將好友資料表的 _id 更新到會員資料中
+      member.friendId = newFriendList._id;
+      await member.save();
     }
+    
     // 產生 token 並加入 cookie
     const token = generateJWT(member);
 
