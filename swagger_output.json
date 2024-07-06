@@ -5,7 +5,7 @@
     "title": "tastejoy api",
     "description": "食享 - 美食地圖專題 api"
   },
-  "host": "tastejoy-api.onrender.com",
+  "host": "localhost:3666",
   "basePath": "/",
   "tags": [
     {
@@ -15,6 +15,10 @@
     {
       "name": "Auth-front",
       "description": "登入/註冊 (前台)"
+    },
+    {
+      "name": "Category-front",
+      "description": "分類 (前台)"
     },
     {
       "name": "HR",
@@ -118,6 +122,7 @@
     }
   ],
   "schemes": [
+    "http",
     "https"
   ],
   "paths": {
@@ -441,7 +446,7 @@
         }
       }
     },
-    "/members/memberOne": {
+    "/members/logged-in": {
       "get": {
         "tags": [
           "Members-front"
@@ -460,7 +465,31 @@
             "description": ""
           }
         }
-      },
+      }
+    },
+    "/members/{memberId}": {
+      "get": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "取得指定會員資料",
+        "description": "取得指定會員資料",
+        "parameters": [
+          {
+            "name": "memberId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/logged-in/info": {
       "patch": {
         "tags": [
           "Members-front"
@@ -524,13 +553,63 @@
         }
       }
     },
-    "/members/memberOne/collections": {
+    "/category/system": {
       "get": {
         "tags": [
-          "Members-front"
+          "Category-front"
         ],
-        "summary": "取得登入會員收藏",
-        "description": "取得登入會員收藏",
+        "summary": "取得系統分類",
+        "description": "取得系統分類",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Category-front"
+        ],
+        "summary": "新增系統分類",
+        "description": "新增系統分類",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "分類名稱"
+                },
+                "adminPassword": {
+                  "type": "string",
+                  "example": "管理員密碼"
+                }
+              },
+              "required": [
+                "name",
+                "adminPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/category/member": {
+      "get": {
+        "tags": [
+          "Category-front"
+        ],
+        "summary": "取得自訂分類",
+        "description": "取得自訂分類",
         "parameters": [
           {
             "name": "token",
@@ -546,10 +625,10 @@
       },
       "post": {
         "tags": [
-          "Members-front"
+          "Category-front"
         ],
-        "summary": "會員新增收藏",
-        "description": "會員新增收藏",
+        "summary": "新增自訂分類",
+        "description": "新增自訂分類",
         "parameters": [
           {
             "name": "token",
@@ -563,13 +642,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "courseId": {
+                "name": {
                   "type": "string",
-                  "example": "帶入有效課程 Id"
+                  "example": "分類名稱"
                 }
               },
               "required": [
-                "courseId"
+                "name"
               ]
             }
           }
@@ -579,63 +658,13 @@
             "description": ""
           }
         }
-      }
-    },
-    "/members/memberOne/collections/{collectionId}": {
-      "delete": {
-        "tags": [
-          "Members-front"
-        ],
-        "summary": "會員刪除收藏",
-        "description": "會員刪除收藏",
-        "parameters": [
-          {
-            "name": "collectionId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "token",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/members/memberOne/orders": {
-      "get": {
-        "tags": [
-          "Members-front"
-        ],
-        "summary": "取得登入會員全部訂單",
-        "description": "取得登入會員全部訂單 <br>  訂單狀態；0:未付款, 1:已付款, 2:已確認收款, 3:已完成, 4:已取消, 5:訂單取消(不需退款), 6:訂單取消(待退款), 7:訂單取消(已退款)",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/members/memberOne/password": {
+      },
       "patch": {
         "tags": [
-          "Members-front"
+          "Category-front"
         ],
-        "summary": "修改會員密碼",
-        "description": "修改會員密碼 <br>  newPassword: 新密碼需包含英文及數字，且至少 8 碼 <br>  confirmNewPassword: 確認新密碼 <br>",
+        "summary": "修改自訂分類",
+        "description": "讓使用者修改其自訂分類，<br>  包括刪除現有分類和新增新的分類。<br>  deleteIds: 要刪除的分類ID陣列<br>  newCategories: 要新增的分類名稱陣列<br>",
         "parameters": [
           {
             "name": "token",
@@ -649,20 +678,32 @@
             "schema": {
               "type": "object",
               "properties": {
-                "newPassword": {
-                  "type": "string",
-                  "example": "Abc123456"
+                "deleteIds": {
+                  "type": "array",
+                  "example": [
+                    "categoryId1",
+                    "categoryId2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 },
-                "confirmNewPassword": {
-                  "type": "string",
-                  "example": "Abc123456"
+                "newCategories": {
+                  "type": "array",
+                  "example": [
+                    "newCategory1"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 }
               },
               "required": [
-                "newPassword",
-                "confirmNewPassword"
+                "deleteIds",
+                "newCategories"
               ]
-            }
+            },
+            "description": "提供要刪除的分類ID陣列和要新增的分類名稱陣列。"
           }
         ],
         "responses": {

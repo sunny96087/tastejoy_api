@@ -5,7 +5,11 @@ const appError = require("../utils/appError");
 // 檢查欄位內容不得為空
 function checkFieldsNotEmpty(data, fields) {
   for (const field of fields) {
-    if (data[field] && typeof data[field] === 'string' && data[field].trim().length === 0) {
+    if (
+      data[field] &&
+      typeof data[field] === "string" &&
+      data[field].trim().length === 0
+    ) {
       return `欄位 ${field} 不能為空`;
     }
   }
@@ -76,6 +80,32 @@ async function findModelByIdNext(Model, id, next) {
   }
 }
 
+// 按陣列內的 ID 查找模型並驗證其存在性
+async function findArrayModelsByIdsNext(Model, ids, next) {
+  if (
+    !Array.isArray(ids) ||
+    ids.some((id) => !mongoose.Types.ObjectId.isValid(id))
+  ) {
+    next(appError(400, "ID 陣列格式不正確或包含無效 ID"));
+    return false;
+  }
+
+  try {
+    const models = await Model.find({ _id: { $in: ids } });
+    const foundIds = models.map((model) => model._id.toString());
+    const missingIds = ids.filter((id) => !foundIds.includes(id));
+
+    if (missingIds.length > 0) {
+      next(appError(404, `以下 ID 不存在: ${missingIds.join(", ")}`));
+      return false;
+    }
+    return true;
+  } catch (error) {
+    next(appError(500, "服務器錯誤"));
+    return false;
+  }
+}
+
 // 遍歷物件中的每個 key，如果值是字串，使用 trim 方法去掉前後的空格
 function trimObjectValues(obj) {
   for (let key in obj) {
@@ -115,5 +145,6 @@ module.exports = {
   trimObjectAllValues,
   hasDataChanged,
   findModelByIdNext,
+  findArrayModelsByIdsNext,
   checkRequiredFields,
 };
