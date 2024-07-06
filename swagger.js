@@ -31,12 +31,12 @@ const doc = {
       description: "分類 (前台)",
     },
     {
-      name: "HR",
-      description: "--- 分隔線 - 以下是參考的 ---",
-    },
-    {
       name: "Members-front",
       description: "會員 (前台)",
+    },
+    {
+      name: "HR",
+      description: "--- 分隔線 - 以下是參考的 ---",
     },
 
     {

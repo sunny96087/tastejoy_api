@@ -78,7 +78,8 @@ router.patch(
                 $deleteIds: ["categoryId1", "categoryId2"],
                 $newCategories: ["newCategory1"]
             },
-            description [string]: `deleteIds: 要刪除的分類ID陣列<br>
+            description [string]: `deleteIds: 要刪除的分類ID陣列。<br>
+            記得提示用戶刪除自訂分類，會將分類從美食紀錄和我的最愛中移除。<br>
             newCategories [string]: 要新增的分類名稱陣列，請在前端阻擋相同名稱的自訂分類，若傳到後台的話幫名稱加上 #1, #2... 的後綴詞<br>`
         }
     */

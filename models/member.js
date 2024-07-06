@@ -72,6 +72,7 @@ const memberSchema = new mongoose.Schema(
     status: {
       type: Number,
       default: 1, // 0:停權 1:啟用
+      select: false,
     },
     // 喜歡的分類
     favoriteCategorys: [
@@ -107,6 +108,7 @@ const memberSchema = new mongoose.Schema(
     isAdmin: {
       type: Boolean,
       default: false,
+      select: false,
     },
     // 登入時間
     loginAt: {

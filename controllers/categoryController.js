@@ -104,6 +104,12 @@ const categoryController = {
         { $pull: { customCategory: { $in: deleteIds } } }
       );
 
+      // 從 Member.favoriteCustomCategorys 中刪除該自訂分類
+      await Member.updateMany(
+        { favoriteCustomCategorys: { $in: deleteIds } },
+        { $pull: { favoriteCustomCategorys: { $in: deleteIds } } }
+      );
+
       // 從 MemberCategory 中刪除該自訂分類
       await MemberCategory.deleteMany({
         _id: { $in: deleteIds },
