@@ -25,6 +25,10 @@
       "description": "會員 (前台)"
     },
     {
+      "name": "FoodRecord-front",
+      "description": "美食紀錄 (前台)"
+    },
+    {
       "name": "HR",
       "description": "--- 分隔線 - 以下是參考的 ---"
     },
@@ -800,7 +804,7 @@
           "FoodRecord-front"
         ],
         "summary": "修改單筆美食紀錄",
-        "description": "修改單筆美食紀錄，整筆資料都要回傳，會直接整筆覆蓋過去。<br>  params: foodRecordId 帶要修改的美食紀錄 ID。<br>  body: 要修改的整筆美食紀錄資料。",
+        "description": "修改單筆美食紀錄，整筆資料都要回傳，會直接整筆覆蓋過去。<br>  params: foodRecordId 帶要修改的美食紀錄 ID。<br>  body: 要修改的整筆美食紀錄資料。<br>  categoryId: 系統分類ID陣列。<br>  customCategoryId (Array(object)): 自訂分類ID陣列。<br>  * store (String): 店家名稱。<br>  phone (String): 店家電話。<br>  * foodName (String): 美食名稱。<br>  description (String): 美食描述。<br>  image (String): 美食圖片 url。<br>  * date (Date): 日期格式為 \"YYYY-MM-DD\"。<br>  * rating (Number): 評分。 1-5 正整數<br>  thoughts (String): 想法。<br>  notes (String): 筆記。<br>  openingHours (String): 營業時間。<br>  storeNotes (String): 店家備註。<br>  * city (String): 城市。<br>  * district (String): 區域。<br>  * address (String): 地址。<br>  * longitude (String): 經度。<br>  * latitude (String): 緯度。<br>  * isPublic (Boolean): 是否公開。",
         "parameters": [
           {
             "name": "foodRecordId",
@@ -813,6 +817,125 @@
             "name": "token",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "type": "array",
+                  "example": [
+                    "categoryId1",
+                    "categoryId2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "customCategoryId": {
+                  "type": "array",
+                  "example": [
+                    "customCategoryId1",
+                    "customCategoryId2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "store": {
+                  "type": "string",
+                  "example": "店家名稱"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "店家電話"
+                },
+                "foodName": {
+                  "type": "string",
+                  "example": "美食名稱"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "美食描述"
+                },
+                "image": {
+                  "type": "string",
+                  "example": "美食圖片"
+                },
+                "date": {
+                  "type": "string",
+                  "example": "日期"
+                },
+                "rating": {
+                  "type": "string",
+                  "example": "評分"
+                },
+                "thoughts": {
+                  "type": "string",
+                  "example": "想法"
+                },
+                "notes": {
+                  "type": "string",
+                  "example": "筆記"
+                },
+                "openingHours": {
+                  "type": "string",
+                  "example": "營業時間"
+                },
+                "storeNotes": {
+                  "type": "string",
+                  "example": "店家備註"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "城市"
+                },
+                "district": {
+                  "type": "string",
+                  "example": "區域"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "地址"
+                },
+                "longitude": {
+                  "type": "string",
+                  "example": "經度"
+                },
+                "latitude": {
+                  "type": "string",
+                  "example": "緯度"
+                },
+                "isPublic": {
+                  "type": "string",
+                  "example": "是否公開"
+                }
+              },
+              "required": [
+                "categoryId",
+                "customCategoryId",
+                "store",
+                "phone",
+                "foodName",
+                "description",
+                "image",
+                "date",
+                "rating",
+                "thoughts",
+                "notes",
+                "openingHours",
+                "storeNotes",
+                "city",
+                "district",
+                "address",
+                "longitude",
+                "latitude",
+                "isPublic"
+              ]
+            }
           }
         ],
         "responses": {
@@ -828,12 +951,131 @@
           "FoodRecord-front"
         ],
         "summary": "新增單筆美食紀錄",
-        "description": "新增單筆美食紀錄",
+        "description": "  新增單筆美食紀錄<br>  categoryId: 系統分類ID陣列。<br>  customCategoryId (Array(object)): 自訂分類ID陣列。<br>  * store (String): 店家名稱。<br>  phone (String): 店家電話。<br>  * foodName (String): 美食名稱。<br>  description (String): 美食描述。<br>  image (String): 美食圖片 url。<br>  * date (Date): 日期格式為 \"YYYY-MM-DD\"。<br>  * rating (Number): 評分。 1-5 正整數<br>  thoughts (String): 想法。<br>  notes (String): 筆記。<br>  openingHours (String): 營業時間。<br>  storeNotes (String): 店家備註。<br>  * city (String): 城市。<br>  * district (String): 區域。<br>  * address (String): 地址。<br>  * longitude (String): 經度。<br>  * latitude (String): 緯度。<br>  * isPublic (Boolean): 是否公開。",
         "parameters": [
           {
             "name": "token",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "type": "array",
+                  "example": [
+                    "categoryId1",
+                    "categoryId2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "customCategoryId": {
+                  "type": "array",
+                  "example": [
+                    "customCategoryId1",
+                    "customCategoryId2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "store": {
+                  "type": "string",
+                  "example": "店家名稱"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "店家電話"
+                },
+                "foodName": {
+                  "type": "string",
+                  "example": "美食名稱"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "美食描述"
+                },
+                "image": {
+                  "type": "string",
+                  "example": "美食圖片"
+                },
+                "date": {
+                  "type": "string",
+                  "example": "日期"
+                },
+                "rating": {
+                  "type": "string",
+                  "example": "評分"
+                },
+                "thoughts": {
+                  "type": "string",
+                  "example": "想法"
+                },
+                "notes": {
+                  "type": "string",
+                  "example": "筆記"
+                },
+                "openingHours": {
+                  "type": "string",
+                  "example": "營業時間"
+                },
+                "storeNotes": {
+                  "type": "string",
+                  "example": "店家備註"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "城市"
+                },
+                "district": {
+                  "type": "string",
+                  "example": "區域"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "地址"
+                },
+                "longitude": {
+                  "type": "string",
+                  "example": "經度"
+                },
+                "latitude": {
+                  "type": "string",
+                  "example": "緯度"
+                },
+                "isPublic": {
+                  "type": "string",
+                  "example": "是否公開"
+                }
+              },
+              "required": [
+                "categoryId",
+                "customCategoryId",
+                "store",
+                "phone",
+                "foodName",
+                "description",
+                "image",
+                "date",
+                "rating",
+                "thoughts",
+                "notes",
+                "openingHours",
+                "storeNotes",
+                "city",
+                "district",
+                "address",
+                "longitude",
+                "latitude",
+                "isPublic"
+              ]
+            }
           }
         ],
         "responses": {
@@ -862,6 +1104,119 @@
             "name": "token",
             "in": "header",
             "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/food-record/share/{foodRecordId}": {
+      "post": {
+        "tags": [
+          "FoodRecord-front"
+        ],
+        "summary": "分享一筆美食紀錄給好友",
+        "description": "分享一筆美食紀錄給好友。<br>  params: foodRecordId 帶要分享的美食紀錄 ID。",
+        "parameters": [
+          {
+            "name": "foodRecordId",
+            "in": "path",
+            "required": true,
+            "description": "美食紀錄 ID",
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "friendId": {
+                  "type": "string",
+                  "example": "好友 Id"
+                }
+              },
+              "required": [
+                "friendId"
+              ]
+            },
+            "description": "  friendId (objectId): 好友 Id"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/food-record/shared/member": {
+      "get": {
+        "tags": [
+          "FoodRecord-front"
+        ],
+        "summary": "取得登入會員所有被分享美食",
+        "description": "取得登入會員所有被分享美食",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/food-record/shared/update-status/{foodShareId}": {
+      "patch": {
+        "tags": [
+          "FoodRecord-front"
+        ],
+        "summary": "變更分享美食狀態",
+        "description": "變更分享美食狀態",
+        "parameters": [
+          {
+            "name": "foodShareId",
+            "in": "path",
+            "required": true,
+            "description": "美食紀錄 ID",
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "accept, reject"
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "description": "  status (string): 狀態。<br>  accept: 接受分享，會建立新的美食紀錄資歷料。<br>  reject: 拒絕分享。"
           }
         ],
         "responses": {
@@ -989,6 +1344,40 @@
             "name": "token",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "deleteIds": {
+                  "type": "array",
+                  "example": [
+                    "categoryId1",
+                    "categoryId2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "newCategories": {
+                  "type": "array",
+                  "example": [
+                    "newCategory1"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "deleteIds",
+                "newCategories"
+              ]
+            },
+            "description": "  deleteIds: 要刪除的分類ID陣列。<br>  記得提示用戶刪除自訂分類，會將分類從美食紀錄和我的最愛中移除。<br>  newCategories [string]: 要新增的分類名稱陣列，請在前端阻擋相同名稱的自訂分類，若傳到後台的話幫名稱加上 #1, #2... 的後綴詞<br>"
           }
         ],
         "responses": {

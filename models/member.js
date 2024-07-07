@@ -104,6 +104,13 @@ const memberSchema = new mongoose.Schema(
     intro: {
       type: String,
     },
+    // 收到的美食紀錄分享 ID
+    receivedFoodShareId: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "FoodShare",
+      },
+    ],
     // 管理員?
     isAdmin: {
       type: Boolean,

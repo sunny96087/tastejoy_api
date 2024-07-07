@@ -35,6 +35,11 @@ const doc = {
       description: "會員 (前台)",
     },
     {
+      name: "FoodRecord-front",
+      description: "美食紀錄 (前台)",
+    },
+
+    {
       name: "HR",
       description: "--- 分隔線 - 以下是參考的 ---",
     },

@@ -16,6 +16,7 @@ const foodShareSchema = new mongoose.Schema(
     foodRecordId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true, // 必填
+      ref: "FoodRecord",
     },
     // 狀態
     status: {

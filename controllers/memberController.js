@@ -20,7 +20,7 @@ const memberController = {
       return next(appError(401, "管理員密碼錯誤"));
     }
 
-    const members = await Member.find();
+    const members = await Member.find().populate("friendId");
     handleSuccess(res, members, "取得所有會員資料成功");
   },
 

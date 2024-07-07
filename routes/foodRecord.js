@@ -39,7 +39,27 @@ router.post(
   handleErrorAsync(foodRecordController.addFoodRecord)
   /*  #swagger.tags = ['FoodRecord-front']
         #swagger.summary = '新增單筆美食紀錄'
-        #swagger.description = `新增單筆美食紀錄`
+        #swagger.description = `
+            新增單筆美食紀錄<br>
+            categoryId: 系統分類ID陣列。<br>
+            customCategoryId (Array(object)): 自訂分類ID陣列。<br>
+            * store (String): 店家名稱。<br>
+            phone (String): 店家電話。<br>
+            * foodName (String): 美食名稱。<br>
+            description (String): 美食描述。<br>
+            image (String): 美食圖片 url。<br>
+            * date (Date): 日期格式為 "YYYY-MM-DD"。<br>
+            * rating (Number): 評分。 1-5 正整數<br>
+            thoughts (String): 想法。<br>
+            notes (String): 筆記。<br>
+            openingHours (String): 營業時間。<br>
+            storeNotes (String): 店家備註。<br>
+            * city (String): 城市。<br>
+            * district (String): 區域。<br>
+            * address (String): 地址。<br>
+            * longitude (String): 經度。<br>
+            * latitude (String): 緯度。<br>
+            * isPublic (Boolean): 是否公開。`
         #swagger.parameters['body'] = {
             in: 'body',
             required: true,
@@ -64,26 +84,6 @@ router.post(
                 $latitude: "緯度",
                 $isPublic: "是否公開"
             },
-            description (Array(object)): `
-                categoryId: 系統分類ID陣列。<br>
-                customCategoryId (Array(object)): 自訂分類ID陣列。<br>
-                * store (String): 店家名稱。<br>
-                phone (String): 店家電話。<br>
-                * foodName (String): 美食名稱。<br>
-                description (String): 美食描述。<br>
-                image (String): 美食圖片 url。<br>
-                * date (Date): 日期格式為 "YYYY-MM-DD"。<br>
-                * rating (Number): 評分。 1-5 正整數<br>
-                thoughts (String): 想法。<br>
-                notes (String): 筆記。<br>
-                openingHours (String): 營業時間。<br>
-                storeNotes (String): 店家備註。<br>
-                * city (String): 城市。<br>
-                * district (String): 區域。<br>
-                * address (String): 地址。<br>
-                * longitude (String): 經度。<br>
-                * latitude (String): 緯度。<br>
-                * isPublic (Boolean): 是否公開。`
         }
     */
 );
@@ -97,7 +97,26 @@ router.put(
         #swagger.summary = '修改單筆美食紀錄'
         #swagger.description = `修改單筆美食紀錄，整筆資料都要回傳，會直接整筆覆蓋過去。<br>
             params: foodRecordId 帶要修改的美食紀錄 ID。<br>
-            body: 要修改的整筆美食紀錄資料。`
+            body: 要修改的整筆美食紀錄資料。<br>
+            categoryId: 系統分類ID陣列。<br>
+            customCategoryId (Array(object)): 自訂分類ID陣列。<br>
+            * store (String): 店家名稱。<br>
+            phone (String): 店家電話。<br>
+            * foodName (String): 美食名稱。<br>
+            description (String): 美食描述。<br>
+            image (String): 美食圖片 url。<br>
+            * date (Date): 日期格式為 "YYYY-MM-DD"。<br>
+            * rating (Number): 評分。 1-5 正整數<br>
+            thoughts (String): 想法。<br>
+            notes (String): 筆記。<br>
+            openingHours (String): 營業時間。<br>
+            storeNotes (String): 店家備註。<br>
+            * city (String): 城市。<br>
+            * district (String): 區域。<br>
+            * address (String): 地址。<br>
+            * longitude (String): 經度。<br>
+            * latitude (String): 緯度。<br>
+            * isPublic (Boolean): 是否公開。`
         #swagger.parameters['path'] = {
             in: 'path',
             required: true,
@@ -128,26 +147,7 @@ router.put(
                 $latitude: "緯度",
                 $isPublic: "是否公開"
             },
-            description (Array(object)): `
-                categoryId: 系統分類ID陣列。<br>
-                customCategoryId (Array(object)): 自訂分類ID陣列。<br>
-                * store (String): 店家名稱。<br>
-                phone (String): 店家電話。<br>
-                * foodName (String): 美食名稱。<br>
-                description (String): 美食描述。<br>
-                image (String): 美食圖片 url。<br>
-                * date (Date): 日期格式為 "YYYY-MM-DD"。<br>
-                * rating (Number): 評分。 1-5 正整數<br>
-                thoughts (String): 想法。<br>
-                notes (String): 筆記。<br>
-                openingHours (String): 營業時間。<br>
-                storeNotes (String): 店家備註。<br>
-                * city (String): 城市。<br>
-                * district (String): 區域。<br>
-                * address (String): 地址。<br>
-                * longitude (String): 經度。<br>
-                * latitude (String): 緯度。<br>
-                * isPublic (Boolean): 是否公開。`
+
         }
     */
 );
@@ -166,6 +166,74 @@ router.patch(
             required: true,
             name: 'foodRecordId',
             description: '美食紀錄 ID'
+        }
+    */
+);
+
+// * 分享一筆美食紀錄給好友
+router.post(
+  "/share/:foodRecordId",
+  isAuth,
+  handleErrorAsync(foodRecordController.shareFoodRecord)
+  /*  #swagger.tags = ['FoodRecord-front']
+        #swagger.summary = '分享一筆美食紀錄給好友'
+        #swagger.description = `分享一筆美食紀錄給好友。<br>
+            params: foodRecordId 帶要分享的美食紀錄 ID。`
+        #swagger.parameters['path'] = {
+            in: 'path',
+            required: true,
+            name: 'foodRecordId',
+            description: '美食紀錄 ID'
+        }
+        #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                $friendId: "好友 Id"
+            },
+            description: `
+                friendId (objectId): 好友 Id`
+        }
+    */
+);
+
+// * 取得登入會員所有被分享美食
+router.get(
+  "/shared/member",
+  isAuth,
+  handleErrorAsync(foodRecordController.getSharedFoodRecords)
+  /*  
+        #swagger.tags = ['FoodRecord-front']
+        #swagger.summary = '取得登入會員所有被分享美食'
+        #swagger.description = '取得登入會員所有被分享美食'
+    */
+);
+
+// * 變更分享美食狀態
+router.patch(
+  "/shared/update-status/:foodShareId",
+  isAuth,
+  handleErrorAsync(foodRecordController.updateShareStatus)
+  /*  
+        #swagger.tags = ['FoodRecord-front']
+        #swagger.summary = '變更分享美食狀態'
+        #swagger.description = `變更分享美食狀態`
+        #swagger.parameters['path'] = {
+            in: 'path',
+            required: true,
+            name: 'foodShareId',
+            description: `美食紀錄 ID`
+        }
+        #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                $status: "accept, reject"
+            },
+            description:`
+                status (string): 狀態。<br>
+                accept: 接受分享，會建立新的美食紀錄資歷料。<br>
+                reject: 拒絕分享。`
         }
     */
 );
