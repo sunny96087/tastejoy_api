@@ -21,12 +21,12 @@
       "description": "分類 (前台)"
     },
     {
-      "name": "HR",
-      "description": "--- 分隔線 - 以下是參考的 ---"
-    },
-    {
       "name": "Members-front",
       "description": "會員 (前台)"
+    },
+    {
+      "name": "HR",
+      "description": "--- 分隔線 - 以下是參考的 ---"
     },
     {
       "name": "Vendors-front",
@@ -494,8 +494,8 @@
         "tags": [
           "Members-front"
         ],
-        "summary": "修改會員資料",
-        "description": "修改登入會員資料，只需帶入欲修改欄位 <br>  interests 陣列中可帶入值為: ['工藝手作','烹飪烘烤','藝術人文','生活品味'] <br>  gender 可帶入值為: male, female, other <br>  birthday 格式需為 Date 物件格式: YYYY-MM-DD、YYYY-MM-DD HH:mm:ss.SSS 等 <br>",
+        "summary": "修改登入會員資料",
+        "description": "修改登入會員資料，只需帶入欲修改欄位。",
         "parameters": [
           {
             "name": "token",
@@ -505,26 +505,13 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "nickname": {
-                  "type": "string",
-                  "example": "瑄瑄仔"
-                },
-                "interests": {
-                  "type": "array",
-                  "example": [
-                    "工藝手作",
-                    "烹飪烘烤"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "name": {
                   "type": "string",
-                  "example": ""
+                  "example": "test123"
                 },
                 "gender": {
                   "type": "string",
@@ -534,16 +521,228 @@
                   "type": "string",
                   "example": "2000-01-01 12:00:00.000"
                 },
-                "phone": {
+                "photo": {
                   "type": "string",
-                  "example": "886912345678"
+                  "example": "https://www.example.com/photo.jpg"
                 },
-                "point": {
-                  "type": "number",
-                  "example": 10000
+                "favoriteCategorys": {
+                  "type": "array",
+                  "example": [
+                    "分類1",
+                    "分類2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "favoriteCustomCategorys": {
+                  "type": "array",
+                  "example": [
+                    "自訂分類1",
+                    "自訂分類2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "intro": {
+                  "type": "string",
+                  "example": "我的個人簡介"
                 }
               }
+            },
+            "description": "  name (string): 名稱 <br>  gender (string): 性別。可帶入值為: male, female, other(預設) <br>  birthday (Date): 生日。格式需為 Date 物件格式: YYYY-MM-DD、YYYY-MM-DD HH:mm:ss.SSS 等 <br>  photo (string): 大頭照 url <br>  favoriteCategorys (Array(objectId)): 喜歡的分類 <br>  favoriteCustomCategorys (Array(objectId)): 喜歡的自訂分類 <br>  intro (string): 個人介紹"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/logged-in/password": {
+      "patch": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "修改會員密碼",
+        "description": "修改會員密碼",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "newPassword": {
+                  "type": "string",
+                  "example": "abc123456"
+                },
+                "confirmNewPassword": {
+                  "type": "string",
+                  "example": "abc123456"
+                }
+              },
+              "required": [
+                "newPassword",
+                "confirmNewPassword"
+              ]
+            },
+            "description": "  newPassword: 新密碼需包含英文及數字，且至少 8 碼 <br>  confirmNewPassword: 確認新密碼需與新密碼相同"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/admin/password": {
+      "patch": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "管理員修改會員密碼",
+        "description": "管理員修改會員密碼",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "memberId": {
+                  "type": "string",
+                  "example": "會員 Id"
+                },
+                "newPassword": {
+                  "type": "string",
+                  "example": "abc123456"
+                },
+                "adminPassword": {
+                  "type": "string",
+                  "example": "管理員密碼"
+                }
+              },
+              "required": [
+                "memberId",
+                "newPassword",
+                "adminPassword"
+              ]
+            },
+            "description": "  memberId (objectId): 會員 Id <br>  newPassword (string): 新密碼 <br>  adminPassword (string): 管理員密碼"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/logged-in/friend": {
+      "get": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "取得登入會員好友",
+        "description": "取得登入會員好友",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/friend/invite": {
+      "post": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "新增單筆好友邀請",
+        "description": "新增單筆好友邀請",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "friendId": {
+                  "type": "string",
+                  "example": "要邀請成為朋友的會員 memberId"
+                }
+              },
+              "required": [
+                "friendId"
+              ]
             }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/friend/update-status": {
+      "patch": {
+        "tags": [
+          "Members-front"
+        ],
+        "summary": "變更好友邀請狀態",
+        "description": "變更好友邀請狀態",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "friendId": {
+                  "type": "string",
+                  "example": "要變更狀態的朋友 memberId"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "accept, reject, delete"
+                }
+              },
+              "required": [
+                "friendId",
+                "status"
+              ]
+            },
+            "description": "  friendId (objectId): 要變更狀態的朋友 memberId <br>  status (string): 狀態。<br>  可帶入值為: <br>  accept: 用戶收到邀請，要接受好友邀請<br>  reject: 用戶收到邀請，要拒絕好友邀請<br>  delete: 雙方已是好友，要刪除好友"
           }
         ],
         "responses": {
@@ -570,8 +769,8 @@
         "tags": [
           "Category-front"
         ],
-        "summary": "新增系統分類",
-        "description": "新增系統分類",
+        "summary": "新增一筆系統分類",
+        "description": "新增一筆系統分類<br>名稱重複會回傳錯誤訊息",
         "parameters": [
           {
             "name": "body",
@@ -650,7 +849,8 @@
               "required": [
                 "name"
               ]
-            }
+            },
+            "description": "前端應該用不到，新增刪除請統一使用 > 修改登入會員自訂分類"
           }
         ],
         "responses": {
@@ -664,46 +864,12 @@
           "Category-front"
         ],
         "summary": "修改自訂分類",
-        "description": "讓使用者修改其自訂分類，<br>  包括刪除現有分類和新增新的分類。<br>  deleteIds: 要刪除的分類ID陣列<br>  newCategories: 要新增的分類名稱陣列<br>",
+        "description": "讓使用者修改其自訂分類，<br>  包括刪除現有分類和新增新的分類。",
         "parameters": [
           {
             "name": "token",
             "in": "header",
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "deleteIds": {
-                  "type": "array",
-                  "example": [
-                    "categoryId1",
-                    "categoryId2"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "newCategories": {
-                  "type": "array",
-                  "example": [
-                    "newCategory1"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "required": [
-                "deleteIds",
-                "newCategories"
-              ]
-            },
-            "description": "提供要刪除的分類ID陣列和要新增的分類名稱陣列。"
           }
         ],
         "responses": {

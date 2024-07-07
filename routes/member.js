@@ -125,6 +125,62 @@ router.patch(
         */
 );
 
+// * 取得登入會員好友
+router.get(
+  "/logged-in/friend",
+  isAuth,
+  handleErrorAsync(memberController.getLoggedInFriends)
+  /*  
+            #swagger.tags = ['Members-front']
+            #swagger.summary = '取得登入會員好友'
+            #swagger.description = `取得登入會員好友`
+        */
+);
 
+// * 新增單筆好友邀請
+router.post(
+  "/friend/invite",
+  isAuth,
+  handleErrorAsync(memberController.addFriendInvite)
+  /*  
+            #swagger.tags = ['Members-front']
+            #swagger.summary = '新增單筆好友邀請'
+            #swagger.description = `新增單筆好友邀請`
+            #swagger.parameters['body'] = {
+                in: 'body',
+                required: true,
+                schema: {
+                    $friendId: "要邀請成為朋友的會員 memberId"
+                }
+            }
+        */
+);
+
+// * 變更好友邀請狀態 (接受/拒絕 邀請、刪除好友)
+router.patch(
+  "/friend/update-status",
+  isAuth,
+  handleErrorAsync(memberController.updateFriendInviteStatus)
+  /*  
+            #swagger.tags = ['Members-front']
+            #swagger.summary = '變更好友邀請狀態'
+            #swagger.description = `變更好友邀請狀態`
+            #swagger.parameters['body'] = {
+                in: 'body',
+                required: true,
+                schema: {
+                    $friendId: "要變更狀態的朋友 memberId",
+                    $status: "accept, reject, delete"
+                },
+                description: `
+                    friendId (objectId): 要變更狀態的朋友 memberId <br>
+                    status (string): 狀態。<br>
+                    可帶入值為: <br>
+                    accept: 用戶收到邀請，要接受好友邀請<br>
+                    reject: 用戶收到邀請，要拒絕好友邀請<br>
+                    delete: 雙方已是好友，要刪除好友`
+            }
+    */
+);
 
 module.exports = router;

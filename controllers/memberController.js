@@ -222,7 +222,251 @@ const memberController = {
     handleSuccess(res, null, "管理員更新會員密碼成功");
   },
 
+  // * 取得登入會員好友 getLoggedInFriends
+  getLoggedInFriends: async (req, res, next) => {
+    const memberId = req.user.id;
 
+    // 先找到登入會員的好友資料 id
+    const memberFriendId = await Member.findById(memberId).select("friendId");
+
+    // 驗證好友資料是否存在
+    if (!memberFriendId) {
+      return next(appError(404, "找不到好友資料"));
+    }
+
+    // 取得好友資料
+    const friendData = await Friend.findById(memberFriendId.friendId)
+      .populate("friendList")
+      .populate("sentRequests")
+      .populate("receivedRequests");
+
+    handleSuccess(res, friendData, "取得登入會員好友成功");
+  },
+
+  // * 新增單筆好友邀請 addFriendInvite
+  addFriendInvite: async (req, res, next) => {
+    const memberId = req.user.id;
+    const { friendId } = req.body;
+
+    // 驗證 friendId 格式和是否存在
+    const isValidFriendId = await tools.findModelByIdNext(
+      Member,
+      friendId,
+      next
+    );
+    if (!isValidFriendId) {
+      return;
+    }
+
+    // 驗證是否為好友
+    const isFriend = await Friend.findOne({
+      memberId: memberId,
+      friendList: friendId,
+    });
+    if (isFriend) {
+      return next(appError(400, "已經是好友了"));
+    }
+
+    // 驗證是否已送出邀請
+    const isSentRequest = await Friend.findOne({
+      memberId: memberId,
+      sentRequests: friendId,
+    });
+    if (isSentRequest) {
+      return next(appError(400, "已送出好友邀請"));
+    }
+
+    // 驗證是否已收到邀請
+    const isReceivedRequest = await Friend.findOne({
+      memberId: memberId,
+      receivedRequests: friendId,
+    });
+    if (isReceivedRequest) {
+      return next(
+        appError(400, "已收到該用戶的好友邀請，到待確認好友看看吧！")
+      );
+    }
+
+    // 新增好友邀請
+    const addInvite = await Friend.findOneAndUpdate(
+      { memberId: memberId },
+      { $push: { sentRequests: friendId } },
+      { new: true }
+    );
+
+    if (!addInvite) {
+      return next(appError(400, "新增好友邀請失敗"));
+    }
+
+    // 送出好友邀請的用戶新增收到邀請
+    const addReceivedInvite = await Friend.findOneAndUpdate(
+      { memberId: friendId },
+      { $push: { receivedRequests: memberId } },
+      { new: true }
+    );
+
+    if (!addReceivedInvite) {
+      return next(appError(400, "新增好友邀請失敗"));
+    }
+
+    handleSuccess(res, null, "新增好友邀請成功");
+  },
+
+  // * 變更好友列表狀態 (接受/拒絕 邀請、刪除好友)
+  updateFriendInviteStatus: async (req, res, next) => {
+    const memberId = req.user.id;
+    const { friendId, status } = req.body;
+
+    // 驗證 friendId, status 是否存在
+    if (!friendId || !status) {
+      return next(appError(400, "好友 Id, 處理狀態為必填"));
+    }
+
+    // 驗證 friendId 格式和是否存在
+    const isValidFriendId = await tools.findModelByIdNext(
+      Member,
+      friendId,
+      next
+    );
+    if (!isValidFriendId) {
+      return;
+    }
+
+    // 驗證 status 值
+    if (!["accept", "reject", "delete"].includes(status)) {
+      return next(
+        appError(
+          400,
+          "請選擇如何處理好友狀態，status 須為 accept, reject 或 delete"
+        )
+      );
+    }
+
+    if (status === "accept" || status === "reject") {
+      // 驗證是否有好友邀請
+      const isReceivedRequest = await Friend.findOne({
+        memberId: memberId,
+        receivedRequests: friendId,
+      });
+      if (!isReceivedRequest) {
+        return next(appError(400, "找不到好友邀請"));
+      }
+    }
+
+    // ? 處理接受好友邀請
+    if (status === "accept") {
+      // 我收到一則好友邀請，我是 memberId，對方是 friendId
+
+      // 先將我收到的好友邀請刪除
+      const deleteReceivedRequest = await Friend.findOneAndUpdate(
+        { memberId: memberId },
+        { $pull: { receivedRequests: friendId } },
+        { new: true }
+      );
+
+      if (!deleteReceivedRequest) {
+        return next(appError(400, "刪除好友收到的好友邀請失敗"));
+      }
+
+      // 將對方送出的好友邀請刪除
+      const deleteSentRequest = await Friend.findOneAndUpdate(
+        { memberId: friendId },
+        { $pull: { sentRequests: memberId } },
+        { new: true }
+      );
+
+      if (!deleteSentRequest) {
+        return next(appError(400, "刪除好友送出的好友邀請失敗"));
+      }
+
+      // 將對方加入我的 friendList
+      const addFriend = await Friend.findOneAndUpdate(
+        { memberId: memberId },
+        { $push: { friendList: friendId } },
+        { new: true }
+      );
+
+      if (!addFriend) {
+        return next(appError(400, "將好友加入 friendList 失敗"));
+      }
+
+      // 將我加入對方的 friendList
+      const addSelfToFriend = await Friend.findOneAndUpdate(
+        { memberId: friendId },
+        { $push: { friendList: memberId } },
+        { new: true }
+      );
+
+      if (!addSelfToFriend) {
+        return next(appError(400, "將自己加入好友的 friendList 失敗"));
+      }
+
+      handleSuccess(res, null, "接受好友邀請成功");
+    }
+
+    // ? 處理拒絕好友邀請
+    if (status === "reject") {
+      // 刪除對方的 sentRequests
+      const deleteSentRequest = await Friend.findOneAndUpdate(
+        { memberId: friendId },
+        { $pull: { sentRequests: memberId } },
+        { new: true }
+      );
+
+      if (!deleteSentRequest) {
+        return next(appError(400, "刪除朋友收到的好友邀請失敗"));
+      }
+
+      // 刪除自己收到的 receivedRequests
+      const deleteReceivedRequest = await Friend.findOneAndUpdate(
+        { memberId: memberId },
+        { $pull: { receivedRequests: friendId } },
+        { new: true }
+      );
+
+      if (!deleteReceivedRequest) {
+        return next(appError(400, "刪除自己收到的好友邀請失敗"));
+      }
+
+      handleSuccess(res, null, "拒絕好友邀請成功");
+    }
+
+    // ? 處理刪除好友
+    if (status === "delete") {
+      // 驗證是否為好友
+      const isFriend = await Friend.findOne({
+        memberId: memberId,
+        friendList: friendId,
+      });
+      if (!isFriend) {
+        return next(appError(400, "找不到好友"));
+      }
+
+      // 刪除自己的 friendList
+      const deleteFriend = await Friend.findOneAndUpdate(
+        { memberId: memberId },
+        { $pull: { friendList: friendId } },
+        { new: true }
+      );
+
+      if (!deleteFriend) {
+        return next(appError(400, "從我的好友列表刪除該好友失敗"));
+      }
+
+      // 刪除對方的 friendList
+      const deleteFriendFromFriend = await Friend.findOneAndUpdate(
+        { memberId: friendId },
+        { $pull: { friendList: memberId } },
+        { new: true }
+      );
+
+      if (!deleteFriendFromFriend) {
+        return next(appError(400, "從對方的好友列表刪除我的好友失敗"));
+      }
+
+      handleSuccess(res, null, "刪除好友成功");
+    }
+  },
 };
 
 module.exports = memberController;
