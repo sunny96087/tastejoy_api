@@ -156,7 +156,7 @@ router.post(
         */
 );
 
-// * 變更好友邀請狀態 (接受/拒絕 邀請、刪除好友)
+// * 變更好友邀請狀態 (接受/拒絕 邀請、刪除好友、取消好友邀請)
 router.patch(
   "/friend/update-status",
   isAuth,
@@ -170,7 +170,7 @@ router.patch(
                 required: true,
                 schema: {
                     $friendId: "要變更狀態的朋友 memberId",
-                    $status: "accept, reject, delete"
+                    $status: "accept, reject, delete, cancel"
                 },
                 description: `
                     friendId (objectId): 要變更狀態的朋友 memberId <br>
@@ -178,7 +178,8 @@ router.patch(
                     可帶入值為: <br>
                     accept: 用戶收到邀請，要接受好友邀請<br>
                     reject: 用戶收到邀請，要拒絕好友邀請<br>
-                    delete: 雙方已是好友，要刪除好友`
+                    delete: 雙方已是好友，要刪除好友<br>
+                    cancel: 用戶發出邀請，要取消好友邀請`
             }
     */
 );

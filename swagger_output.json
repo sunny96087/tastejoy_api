@@ -734,7 +734,7 @@
                 },
                 "status": {
                   "type": "string",
-                  "example": "accept, reject, delete"
+                  "example": "accept, reject, delete, cancel"
                 }
               },
               "required": [
@@ -742,7 +742,7 @@
                 "status"
               ]
             },
-            "description": "  friendId (objectId): 要變更狀態的朋友 memberId <br>  status (string): 狀態。<br>  可帶入值為: <br>  accept: 用戶收到邀請，要接受好友邀請<br>  reject: 用戶收到邀請，要拒絕好友邀請<br>  delete: 雙方已是好友，要刪除好友"
+            "description": "  friendId (objectId): 要變更狀態的朋友 memberId <br>  status (string): 狀態。<br>  可帶入值為: <br>  accept: 用戶收到邀請，要接受好友邀請<br>  reject: 用戶收到邀請，要拒絕好友邀請<br>  delete: 雙方已是好友，要刪除好友<br>  cancel: 用戶發出邀請，要取消好友邀請"
           }
         ],
         "responses": {

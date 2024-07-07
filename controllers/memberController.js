@@ -312,7 +312,7 @@ const memberController = {
     handleSuccess(res, null, "新增好友邀請成功");
   },
 
-  // * 變更好友列表狀態 (接受/拒絕 邀請、刪除好友)
+  // * 變更好友列表狀態 (接受/拒絕 邀請、刪除好友、取消好友邀請)
   updateFriendInviteStatus: async (req, res, next) => {
     const memberId = req.user.id;
     const { friendId, status } = req.body;
@@ -333,11 +333,11 @@ const memberController = {
     }
 
     // 驗證 status 值
-    if (!["accept", "reject", "delete"].includes(status)) {
+    if (!["accept", "reject", "delete", "cancel"].includes(status)) {
       return next(
         appError(
           400,
-          "請選擇如何處理好友狀態，status 須為 accept, reject 或 delete"
+          "請選擇如何處理好友狀態，status 須為 accept, reject, delete, cancel"
         )
       );
     }
@@ -350,6 +350,17 @@ const memberController = {
       });
       if (!isReceivedRequest) {
         return next(appError(400, "找不到好友邀請"));
+      }
+    }
+
+    if (status === "cancel") {
+      // 驗證是否有送出的好友邀請
+      const isSentRequest = await Friend.findOne({
+        memberId: memberId,
+        sentRequests: friendId,
+      });
+      if (!isSentRequest) {
+        return next(appError(400, "找不到送出的好友邀請"));
       }
     }
 
@@ -465,6 +476,33 @@ const memberController = {
       }
 
       handleSuccess(res, null, "刪除好友成功");
+    }
+
+    // ? 處理取消好友邀請
+    if (status === "cancel") {
+      // 刪除自己的 sentRequests
+      const deleteSentRequest = await Friend.findOneAndUpdate(
+        { memberId: memberId },
+        { $pull: { sentRequests: friendId } },
+        { new: true }
+      );
+
+      if (!deleteSentRequest) {
+        return next(appError(400, "刪除送出的好友邀請失敗"));
+      }
+
+      // 刪除對方的 receivedRequests
+      const deleteReceivedRequest = await Friend.findOneAndUpdate(
+        { memberId: friendId },
+        { $pull: { receivedRequests: memberId } },
+        { new: true }
+      );
+
+      if (!deleteReceivedRequest) {
+        return next(appError(400, "刪除對方收到的好友邀請失敗"));
+      }
+
+      handleSuccess(res, null, "取消好友邀請成功");
     }
   },
 };
