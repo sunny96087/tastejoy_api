@@ -752,6 +752,125 @@
         }
       }
     },
+    "/food-record/logged-in": {
+      "get": {
+        "tags": [
+          "FoodRecord-front"
+        ],
+        "summary": "取得登入會員所有美食紀錄",
+        "description": "取得登入會員所有美食紀錄",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/food-record/{foodRecordId}": {
+      "get": {
+        "tags": [
+          "FoodRecord-front"
+        ],
+        "summary": "取得指定的單筆美食紀錄",
+        "description": "取得指定的單筆美食紀錄。<br>  無法查看已刪除或未公開的紀錄。",
+        "parameters": [
+          {
+            "name": "foodRecordId",
+            "in": "path",
+            "required": true,
+            "description": "美食紀錄 ID",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "FoodRecord-front"
+        ],
+        "summary": "修改單筆美食紀錄",
+        "description": "修改單筆美食紀錄，整筆資料都要回傳，會直接整筆覆蓋過去。<br>  params: foodRecordId 帶要修改的美食紀錄 ID。<br>  body: 要修改的整筆美食紀錄資料。",
+        "parameters": [
+          {
+            "name": "foodRecordId",
+            "in": "path",
+            "required": true,
+            "description": "美食紀錄 ID",
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/food-record/": {
+      "post": {
+        "tags": [
+          "FoodRecord-front"
+        ],
+        "summary": "新增單筆美食紀錄",
+        "description": "新增單筆美食紀錄",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/food-record/soft-delete/{foodRecordId}": {
+      "patch": {
+        "tags": [
+          "FoodRecord-front"
+        ],
+        "summary": "偽刪除單筆美食紀錄",
+        "description": "偽刪除單筆美食紀錄。<br>  params: foodRecordId 帶要刪除的美食紀錄 ID。",
+        "parameters": [
+          {
+            "name": "foodRecordId",
+            "in": "path",
+            "required": true,
+            "description": "美食紀錄 ID",
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/category/system": {
       "get": {
         "tags": [

@@ -11,15 +11,21 @@ const foodRecordSchema = new mongoose.Schema(
     // 分類 ID
     categoryId: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Category",
+        },
+        name: String, // 存儲關聯文檔的名稱
       },
     ],
-    // 自訂分類
-    customCategory: [
+    // 自訂分類 ID
+    customCategoryId: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "MemberCategory",
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "MemberCategory",
+        },
+        name: String, // 存儲關聯文檔的名稱
       },
     ],
     // 餐廳名稱
@@ -102,6 +108,11 @@ const foodRecordSchema = new mongoose.Schema(
       type: Number,
       required: true, // 必填
       default: 0, // 預設為私密, 0:私密 1:公開
+    },
+    // 狀態
+    status: {
+      type: Number,
+      default: 1, // 預設值為啟用狀態, 0:停用 1:啟用
     },
   },
   {

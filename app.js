@@ -54,7 +54,7 @@ mongoose
 const membersRouter = require("./routes/member");
 const authRouter = require("./routes/auth");
 const feedbackRouter = require("./routes/feedback");
-// const orderRouter = require("./routes/order");
+const foodRecordRouter = require("./routes/foodRecord");
 // const platformRouter = require("./routes/platform");
 const categoryRouter = require("./routes/category");
 // const courseRouter = require("./routes/course");
@@ -106,7 +106,7 @@ app.use("/", indexRouter);
 
 app.use("/auth", authRouter);
 app.use("/members", membersRouter);
-// app.use("/orders", orderRouter);
+app.use("/food-record", foodRecordRouter);
 app.use("/category", categoryRouter);
 app.use("/feedbacks", feedbackRouter);
 // app.use("/platforms", platformRouter);

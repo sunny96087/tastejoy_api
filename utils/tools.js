@@ -106,6 +106,33 @@ async function findArrayModelsByIdsNext(Model, ids, next) {
   }
 }
 
+// 按陣列內的 ID 查找模型，驗證其存在性，並返回找到的模型對象
+async function findArrayModelsByIdsAndReturn(Model, ids, next) {
+  if (
+    !Array.isArray(ids) ||
+    ids.some((id) => !mongoose.Types.ObjectId.isValid(id))
+  ) {
+    next(appError(400, "ID 陣列格式不正確或包含無效 ID"));
+    return null;
+  }
+
+  try {
+    const models = await Model.find({ _id: { $in: ids } });
+    const foundIds = models.map((model) => model._id.toString());
+    const missingIds = ids.filter((id) => !foundIds.includes(id));
+
+    if (missingIds.length > 0) {
+      next(appError(404, `以下 ID 不存在: ${missingIds.join(", ")}`));
+      return null;
+    }
+    // 直接返回找到的模型對象
+    return models;
+  } catch (error) {
+    next(appError(500, "服務器錯誤"));
+    return null;
+  }
+}
+
 // 遍歷物件中的每個 key，如果值是字串，使用 trim 方法去掉前後的空格
 function trimObjectValues(obj) {
   for (let key in obj) {
@@ -146,5 +173,6 @@ module.exports = {
   hasDataChanged,
   findModelByIdNext,
   findArrayModelsByIdsNext,
+  findArrayModelsByIdsAndReturn,
   checkRequiredFields,
 };
