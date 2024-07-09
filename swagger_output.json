@@ -5,7 +5,7 @@
     "title": "tastejoy api",
     "description": "食享 - 美食地圖專題 api"
   },
-  "host": "localhost:3666",
+  "host": "tastejoy-api.onrender.com",
   "basePath": "/",
   "tags": [
     {
@@ -126,7 +126,6 @@
     }
   ],
   "schemes": [
-    "http",
     "https"
   ],
   "paths": {

@@ -9,11 +9,11 @@ const doc = {
     description: "食享 - 美食地圖專題 api",
   },
   // * 開發
-  host: "localhost:3666",
-  schemes: ["http", "https"],
+  // host: "localhost:3666",
+  // schemes: ["http", "https"],
   // * 部署
-  // host: "tastejoy-api.onrender.com",
-  // schemes: ["https"],
+  host: "tastejoy-api.onrender.com",
+  schemes: ["https"],
 
   basePath: "/",
   tags: [
