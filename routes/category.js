@@ -88,9 +88,74 @@ router.patch(
 
 // // * 刪除登入會員自訂分類
 
-// * 取得會員美食紀錄全分類 /member/food-record
-// * 取得公開美食全分類 /public/food-record
-// * 隨機抽系統的分類 /random/public
-// * 隨機抽自己的分類 /random
+// * 取得會員美食紀錄全分類
+router.get(
+  "/member/food-record",
+  isAuth,
+  handleErrorAsync(categoryController.getMemberFoodRecordCategories)
+  /*  #swagger.tags = ['Category-front']
+        #swagger.summary = '取得會員美食紀錄全分類'
+        #swagger.description = `取得會員美食紀錄全分類<br>
+            uniqueCategoryIds : 系統分類陣列<br>
+            uniqueCustomCategoryIds : 自訂分類陣列`
+    */
+);
+
+// * 取得公開美食全分類
+router.get(
+  "/public/food-record",
+  handleErrorAsync(categoryController.getPublicFoodRecordCategories)
+  /*  #swagger.tags = ['Category-front']
+        #swagger.summary = '取得公開美食全分類'
+        #swagger.description = `取得公開美食全分類<br>
+            uniqueCategoryIds : 系統分類陣列<br>
+            uniqueCustomCategoryIds : 自訂分類陣列`
+    */
+);
+
+// * 隨機抽自己的分類
+router.get(
+  "/random",
+  isAuth,
+  handleErrorAsync(categoryController.randomMemberCategory)
+  /*    #swagger.tags = ['Category-front']
+        #swagger.summary = '隨機抽自己的分類'
+        #swagger.description = `隨機抽自己的分類`
+        #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                $categorys: ["categoryId1", "categoryId2"],
+                $memberCategorys: ["memberCategoryId1"],
+                $limit: 1
+            },
+            description: `
+            categorys: 選取的系統分類ID陣列。<br>
+            memberCategorys: 選取的自訂分類ID陣列。<br>
+            limit: 抽取數量。<br>`
+        }
+    */
+);
+
+// * 隨機抽系統的分類
+router.get(
+  "/random/public",
+  handleErrorAsync(categoryController.randomPublicCategory)
+  /*    #swagger.tags = ['Category-front']
+        #swagger.summary = '隨機抽系統的分類'
+        #swagger.description = `隨機抽系統的分類`
+        #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                $categorys: ["categoryId1", "categoryId2"],
+                $limit: 1
+            },
+            description: `
+            categorys: 選取的系統分類ID陣列。<br>
+            limit: 抽取數量。<br>`
+        }
+    */
+);
 
 module.exports = router;

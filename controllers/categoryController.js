@@ -98,10 +98,10 @@ const categoryController = {
         $pull: { customCategories: { $in: deleteIds } },
       });
 
-      // 從美食紀錄中移除該自訂分類 // BUG 待測試
+      // 從美食紀錄中移除指定的自訂分類ID
       await FoodRecord.updateMany(
         { memberId: memberId },
-        { $pull: { customCategory: { $in: deleteIds } } }
+        { $pull: { customCategoryId: { id: { $in: deleteIds } } } }
       );
 
       // 從 Member.favoriteCustomCategorys 中刪除該自訂分類
@@ -154,11 +154,291 @@ const categoryController = {
 
   // // * 刪除登入會員自訂分類
 
-  // * 取得會員美食紀錄全分類 getMemberFoodRecordCategories
-  // * 取得公開美食全分類 getPublicFoodRecordCategories
+  // * 取得會員美食紀錄全分類 (在美食紀錄中使用到的所有 categoryId 和 customCategoryId)
+  getMemberFoodRecordCategories: async (req, res, next) => {
+    // 取得登入會員 id
+    const memberId = req.user.id;
+    console.log("memberId", memberId);
 
-  // * 隨機抽系統的分類 > 限制抽取分類、抽取數量 randomPublicCategory
-  // * 隨機抽自己的分類 > 限制抽取分類、抽取數量 randomMemberCategory
+    // 將 memberId 從字符串轉換為 ObjectId
+    const objectIdMemberId = new mongoose.Types.ObjectId(memberId);
+
+    // 使用聚合管道取回所有使用到的 categoryId 和 customCategoryId
+    const usedCategories = await FoodRecord.aggregate([
+      { $match: { memberId: objectIdMemberId } },
+      { $unwind: { path: "$categoryId", preserveNullAndEmptyArrays: true } },
+      {
+        $unwind: {
+          path: "$customCategoryId",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          categoryId: 1,
+          customCategoryId: 1,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          uniqueCategoryIds: { $addToSet: "$categoryId" },
+          uniqueCustomCategoryIds: { $addToSet: "$customCategoryId" },
+        },
+      },
+      {
+        $project: {
+          uniqueCategoryIds: {
+            $filter: {
+              input: "$uniqueCategoryIds",
+              as: "categoryId",
+              cond: { $ne: ["$$categoryId", null] },
+            },
+          },
+          uniqueCustomCategoryIds: {
+            $filter: {
+              input: "$uniqueCustomCategoryIds",
+              as: "customCategoryId",
+              cond: { $ne: ["$$customCategoryId", null] },
+            },
+          },
+        },
+      },
+    ]);
+
+    // 檢查是否有結果，如果沒有，則返回一個空的數據集
+    if (
+      !usedCategories.length ||
+      (!usedCategories[0].uniqueCategoryIds.length &&
+        !usedCategories[0].uniqueCustomCategoryIds.length)
+    ) {
+      return handleSuccess(
+        res,
+        { uniqueCategoryIds: [], uniqueCustomCategoryIds: [] },
+        "取得使用到的分類成功，但沒有找到任何分類"
+      );
+    }
+
+    // 定義一個函數來過濾 uniqueCategoryIds 和 uniqueCustomCategoryIds 陣列中重複的 id
+    function filterUniqueCategories(categories) {
+      const unique = {};
+      // 使用 reduce 方法來累積唯一的項目
+      return categories.reduce((acc, current) => {
+        if (!unique[current.id]) {
+          unique[current.id] = true;
+          acc.push(current);
+        }
+        return acc;
+      }, []);
+    }
+
+    // 假設這是聚合管道的結果
+    const result = usedCategories[0]; // 假設只有一個結果
+
+    const uniqueCategoryIds = filterUniqueCategories(result.uniqueCategoryIds);
+
+    const uniqueCustomCategoryIds = filterUniqueCategories(
+      result.uniqueCustomCategoryIds
+    );
+
+    // 更新結果
+    const uniqueResult = {
+      ...result,
+      uniqueCategoryIds,
+      uniqueCustomCategoryIds,
+    };
+
+    console.log(uniqueResult);
+
+    // 成功取得資料，返回給客戶端
+    handleSuccess(res, uniqueResult, "取得使用到的分類成功");
+  },
+
+  // * 取得公開美食全分類
+  getPublicFoodRecordCategories: async (req, res, next) => {
+    // 使用聚合管道取回所有使用到的 categoryId 和 customCategoryId
+    const usedCategories = await FoodRecord.aggregate([
+      {
+        $match: {
+          isPublic: 1, // 修改搜尋條件為 isPublic 等於 1
+        },
+      },
+      { $unwind: { path: "$categoryId", preserveNullAndEmptyArrays: true } },
+      {
+        $unwind: {
+          path: "$customCategoryId",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          categoryId: 1,
+          customCategoryId: 1,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          uniqueCategoryIds: { $addToSet: "$categoryId" },
+          uniqueCustomCategoryIds: { $addToSet: "$customCategoryId" },
+        },
+      },
+      {
+        $project: {
+          uniqueCategoryIds: {
+            $filter: {
+              input: "$uniqueCategoryIds",
+              as: "categoryId",
+              cond: { $ne: ["$$categoryId", null] },
+            },
+          },
+          uniqueCustomCategoryIds: {
+            $filter: {
+              input: "$uniqueCustomCategoryIds",
+              as: "customCategoryId",
+              cond: { $ne: ["$$customCategoryId", null] },
+            },
+          },
+        },
+      },
+    ]);
+
+    // 檢查是否有結果，如果沒有，則返回一個空的數據集
+    if (
+      !usedCategories.length ||
+      (!usedCategories[0].uniqueCategoryIds.length &&
+        !usedCategories[0].uniqueCustomCategoryIds.length)
+    ) {
+      return handleSuccess(
+        res,
+        { uniqueCategoryIds: [], uniqueCustomCategoryIds: [] },
+        "取得使用到的分類成功，但沒有找到任何分類"
+      );
+    }
+
+    // 定義一個函數來過濾 uniqueCategoryIds 和 uniqueCustomCategoryIds 陣列中重複的 id
+    function filterUniqueCategories(categories) {
+      const unique = {};
+      // 使用 reduce 方法來累積唯一的項目
+      return categories.reduce((acc, current) => {
+        if (!unique[current.id]) {
+          unique[current.id] = true;
+          acc.push(current);
+        }
+        return acc;
+      }, []);
+    }
+
+    // 假設這是聚合管道的結果
+    const result = usedCategories[0]; // 假設只有一個結果
+
+    const uniqueCategoryIds = filterUniqueCategories(result.uniqueCategoryIds);
+
+    const uniqueCustomCategoryIds = filterUniqueCategories(
+      result.uniqueCustomCategoryIds
+    );
+
+    // 更新結果
+    const uniqueResult = {
+      ...result,
+      uniqueCategoryIds,
+      uniqueCustomCategoryIds,
+    };
+
+    console.log(uniqueResult);
+
+    // 成功取得資料，返回給客戶端
+    handleSuccess(res, uniqueResult, "取得使用到的分類成功");
+  },
+
+  // * 隨機抽自己的分類 > 限制抽取分類、抽取數量
+  randomMemberCategory: async (req, res, next) => {
+    // 取得登入會員 id
+    const memberId = req.user.id;
+
+    // 取回參數 (選擇系統分類、選擇自訂分類、抽取數量)
+    const { categorys = [], memberCategorys = [], limit } = req.body;
+
+    let allCategories = [];
+
+    // 如果有選擇系統分類、選擇自訂分類，則從選擇的這幾個分類中隨機抽取
+    if (categorys.length > 0 || memberCategorys.length > 0) {
+      allCategories = categorys.concat(memberCategorys);
+    } else {
+      // 取得登入會員的自訂分類
+      const memberCategories = await MemberCategory.find({ memberId });
+      // 取得系統分類
+      const systemCategories = await Category.find();
+      allCategories = memberCategories.concat(systemCategories);
+    }
+
+    // 隨機抽取指定數量
+    const randomCategories = allCategories
+      .sort(() => 0.5 - Math.random())
+      .slice(0, limit);
+
+    // 填充分類資料
+    const filledCategories = await Promise.all(
+      randomCategories.map(async (id) => {
+        // 先在 MemberCategory 中尋找
+        let category = await MemberCategory.findById(id);
+
+        // 如果在 MemberCategory 中找不到，則在 Category 中尋找
+        if (!category) {
+          category = await Category.findById(id);
+        }
+
+        // 返回找到的分類，如果兩者都沒有找到，則返回 null 或其他適當的值
+        return category;
+      })
+    );
+
+    // 過濾掉未找到的項目（如果需要）
+    const foundCategories = filledCategories.filter(
+      (category) => category !== null
+    );
+
+    handleSuccess(res, foundCategories, "隨機抽取分類成功");
+  },
+
+  // * 隨機抽系統的分類 > 限制抽取分類、抽取數量
+  randomPublicCategory: async (req, res, next) => {
+    // 取回參數 (選擇系統分類、選擇自訂分類、抽取數量)
+    const { categorys = [], limit } = req.body;
+
+    let allCategories = [];
+
+    // 如果有選擇系統分類，則從選擇的這幾個分類中隨機抽取
+    if (categorys.length > 0) {
+      allCategories = categorys;
+    } else {
+      // 取得系統分類
+      allCategories = await Category.find();
+    }
+
+    // 隨機抽取指定數量
+    const randomCategories = allCategories
+      .sort(() => 0.5 - Math.random())
+      .slice(0, limit);
+
+    // 填充分類資料
+    const filledCategories = await Promise.all(
+      randomCategories.map(async (id) => {
+        // 在 Category 中尋找
+        const category = await Category.findById(id);
+
+        // 返回找到的分類，如果兩者都沒有找到，則返回 null 或其他適當的值
+        return category;
+      })
+    );
+
+    // 過濾掉未找到的項目（如果需要）
+    const foundCategories = filledCategories.filter(
+      (category) => category !== null
+    );
+
+    handleSuccess(res, foundCategories, "隨機抽取分類成功");
+  },
 };
 
 module.exports = categoryController;

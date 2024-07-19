@@ -1386,6 +1386,146 @@
         }
       }
     },
+    "/category/member/food-record": {
+      "get": {
+        "tags": [
+          "Category-front"
+        ],
+        "summary": "取得會員美食紀錄全分類",
+        "description": "取得會員美食紀錄全分類<br>  uniqueCategoryIds : 系統分類陣列<br>  uniqueCustomCategoryIds : 自訂分類陣列",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/category/public/food-record": {
+      "get": {
+        "tags": [
+          "Category-front"
+        ],
+        "summary": "取得公開美食全分類",
+        "description": "取得公開美食全分類<br>  uniqueCategoryIds : 系統分類陣列<br>  uniqueCustomCategoryIds : 自訂分類陣列",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/category/random": {
+      "get": {
+        "tags": [
+          "Category-front"
+        ],
+        "summary": "隨機抽自己的分類",
+        "description": "隨機抽自己的分類",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categorys": {
+                  "type": "array",
+                  "example": [
+                    "categoryId1",
+                    "categoryId2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "memberCategorys": {
+                  "type": "array",
+                  "example": [
+                    "memberCategoryId1"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "limit": {
+                  "type": "number",
+                  "example": 1
+                }
+              },
+              "required": [
+                "categorys",
+                "memberCategorys",
+                "limit"
+              ]
+            },
+            "description": "  categorys: 選取的系統分類ID陣列。<br>  memberCategorys: 選取的自訂分類ID陣列。<br>  limit: 抽取數量。<br>"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/category/random/public": {
+      "get": {
+        "tags": [
+          "Category-front"
+        ],
+        "summary": "隨機抽系統的分類",
+        "description": "隨機抽系統的分類",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categorys": {
+                  "type": "array",
+                  "example": [
+                    "categoryId1",
+                    "categoryId2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "limit": {
+                  "type": "number",
+                  "example": 1
+                }
+              },
+              "required": [
+                "categorys",
+                "limit"
+              ]
+            },
+            "description": "  categorys: 選取的系統分類ID陣列。<br>  limit: 抽取數量。<br>"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/feedbacks/": {
       "post": {
         "tags": [
