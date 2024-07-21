@@ -47,7 +47,7 @@ mongoose
 // 引入自訂路由 routes
 // const postsRouter = require("./routes/posts");
 // var usersRouter = require("./routes/users");
-// const uploadRouter = require("./routes/upload");
+const uploadRouter = require("./routes/upload");
 // const emailRouter = require("./routes/email");
 
 // const vendorsRouter = require("./routes/vendors");
@@ -101,7 +101,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 // app.use("/users", usersRouter);
 // app.use("/posts", postsRouter);
-// app.use("/upload", uploadRouter);
+app.use("/upload", uploadRouter);
 // app.use("/email", emailRouter);
 
 app.use("/auth", authRouter);

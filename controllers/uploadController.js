@@ -119,7 +119,7 @@ const uploadController = {
     handleSuccess(res, { imgUrls }, `上傳 ${imgUrls.length} 張圖片成功 回傳圖片網址`);
   },
 
-  // 上傳單張圖片 (front)
+  // * 上傳單張圖片 (front)
   uploadMemberImage: async function (req, res, next) {
     const file = req.file;
 

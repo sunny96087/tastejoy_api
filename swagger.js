@@ -38,7 +38,11 @@ const doc = {
       name: "FoodRecord-front",
       description: "美食紀錄 (前台)",
     },
-
+    {
+      name: "Upload-front",
+      description: "上傳圖片 (前台)",
+    },
+    
     {
       name: "HR",
       description: "--- 分隔線 - 以下是參考的 ---",
@@ -105,10 +109,6 @@ const doc = {
       description: "平台資料 (平台管理員)",
     },
 
-    {
-      name: "Upload-front",
-      description: "上傳圖片 (前台)",
-    },
     {
       name: "Upload-back",
       description: "上傳圖片 (後台)",

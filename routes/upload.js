@@ -159,10 +159,9 @@ router.post(
   */
 );
 
-// 前台圖片上傳-單張 (front)
+// * 前台圖片上傳-單張 (front)
 router.post(
-  "/singleImage/front",
-  isAuth,
+  "/singleImage",
   handleFileUpload,
   handleErrorAsync(uploadController.uploadMemberImage)
   /*  #swagger.tags = ['Upload-front']

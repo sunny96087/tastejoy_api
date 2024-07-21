@@ -29,6 +29,10 @@
       "description": "美食紀錄 (前台)"
     },
     {
+      "name": "Upload-front",
+      "description": "上傳圖片 (前台)"
+    },
+    {
       "name": "HR",
       "description": "--- 分隔線 - 以下是參考的 ---"
     },
@@ -93,10 +97,6 @@
       "description": "平台資料 (平台管理員)"
     },
     {
-      "name": "Upload-front",
-      "description": "上傳圖片 (前台)"
-    },
-    {
       "name": "Upload-back",
       "description": "上傳圖片 (後台)"
     },
@@ -135,6 +135,277 @@
           "Index"
         ],
         "description": "express 預設首頁，目前沒用",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/upload/singleImage/admin": {
+      "post": {
+        "tags": [
+          "Upload-back"
+        ],
+        "summary": "上傳單張圖片 (back)",
+        "description": "上傳單張圖片 (back)",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "圖片檔案",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "file"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "binary"
+                },
+                "required": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/upload/multipleImage/admin": {
+      "post": {
+        "tags": [
+          "Upload-back"
+        ],
+        "summary": "上傳多張圖片 (不超過 5 張) (back)",
+        "description": "上傳多張圖片 (不超過 5 張) (back)",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "圖片檔案",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "file"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "binary"
+                },
+                "required": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/upload/singleImage": {
+      "post": {
+        "tags": [
+          "Upload-front"
+        ],
+        "summary": "上傳單張圖片 (front)",
+        "description": "上傳單張圖片 (front)",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "圖片檔案",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "file"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "binary"
+                },
+                "required": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/upload/image": {
+      "post": {
+        "tags": [
+          "Upload"
+        ],
+        "description": "上傳圖片",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "file"
+                    },
+                    "format": {
+                      "type": "string",
+                      "example": "binary"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "圖片檔案"
+                    },
+                    "required": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Upload"
+        ],
+        "summary": "刪除圖片",
+        "description": "刪除圖片",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "圖片檔案名稱"
+                },
+                "required": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Upload"
+        ],
+        "summary": "獲取所有圖片列表",
+        "description": "獲取所有圖片列表",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/upload/userImage": {
+      "post": {
+        "tags": [
+          "Upload"
+        ],
+        "summary": "上傳圖片 -> 要登入才能用的版本",
+        "description": "上傳圖片 -> 要登入才能用的版本",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "file"
+                    },
+                    "format": {
+                      "type": "string",
+                      "example": "binary"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "圖片檔案"
+                    },
+                    "required": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": ""
